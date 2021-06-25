@@ -303,6 +303,16 @@ public class CleverTapPlugin implements ActivityAware,
                 getEventHistory(result);
                 break;
             }
+
+            case "pushNotificationClickedEvent": {
+                pushNotificationClickedEvent(call, result);
+                break;
+            }
+            case "pushNotificationViewedEvent": {
+                pushNotificationViewedEvent(call, result);
+                break;
+            }
+
             //Profile API
             case "setLocation": {
                 setLocation(call, result);
@@ -1314,6 +1324,26 @@ public class CleverTapPlugin implements ActivityAware,
         if (isCleverTapNotNull(cleverTapAPI)) {
             cleverTapAPI.pushInstallReferrer(source, medium, campaign);
             result.success(null);
+        } else {
+            result.error(TAG, ERROR_MSG, null);
+        }
+    }
+
+    private void pushNotificationClickedEvent(MethodCall call, Result result) {
+        HashMap<String, Object> extrasMap = call.argument("notificationData");
+        Bundle extras = Utils.mapToBundle(extrasMap);
+        if (isCleverTapNotNull(cleverTapAPI)) {
+            this.cleverTapAPI.pushNotificationClickedEvent(extras);
+        } else {
+            result.error(TAG, ERROR_MSG, null);
+        }
+    }
+
+    private void pushNotificationViewedEvent(MethodCall call, Result result) {
+        HashMap<String, Object> extrasMap = call.argument("notificationData");
+        Bundle extras = Utils.mapToBundle(extrasMap);
+        if (isCleverTapNotNull(cleverTapAPI)) {
+            this.cleverTapAPI.pushNotificationViewedEvent(extras);
         } else {
             result.error(TAG, ERROR_MSG, null);
         }
